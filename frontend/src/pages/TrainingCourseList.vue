@@ -49,7 +49,7 @@ const courses = createListResource({
     'name', 'module_name', 'course_name', 'course_description', 
     'start_date', 'teaching_mode', 'route'
   ],
-  limit: 100,
+  limit: 1000,
   auto: true
 })
 </script>
