@@ -3,7 +3,7 @@
     <h1 class="text-2xl font-bold mb-6">Training Courses</h1>
     
     <!-- Loading state -->
-    <div v-if="courses.list.loading" class="text-gray-500">Loading courses...</div>
+    <div v-if="courses.loading" class="text-gray-500">Loading courses...</div>
 
     <!-- The 'Cards' Grid -->
     <div v-else-if="courses.data && courses.data.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -39,17 +39,11 @@
 </template>
 
 <script setup>
-import { createListResource } from 'frappe-ui'
+import { createResource } from 'frappe-ui'
 
-// Automatically fetches the records from your ERPNext backend
-const courses = createListResource({
-  doctype: 'Training Course', // Your exact Doctpye Name
-  // Ask the backend to return these specific fields from your list
-  fields: [
-    'name', 'module_name', 'course_name', 'course_description', 
-    'start_date', 'teaching_mode', 'route'
-  ],
-  limit: 1000,
+// Fetches ONLY the courses the user has permission to see (Teacher or Student)
+const courses = createResource({
+  url: 'lms_custom.api.get_my_training_courses',
   auto: true
 })
 </script>
