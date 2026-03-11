@@ -88,7 +88,7 @@ def inject_lms_customizations(*args, **kwargs):
                         content = f.read()
                     
                     if 'to="/courses"' in content or "to='/courses'" in content:
-                        if "to=\\"/training-courses\\"" not in content and "to='/training-courses'" not in content:
+                        if 'to="/training-courses"' not in content and "to='/training-courses'" not in content:
                             # Use regex to inject snippet right after the closing tag of the Courses link
                             content = re.sub(r'(<router-link[^>]*to=[\'"]/courses[\'"][^>]*>.*?</router-link>)', r'\\1' + sidebar_injection, content, flags=re.DOTALL)
                             with open(filepath, 'w') as f:
