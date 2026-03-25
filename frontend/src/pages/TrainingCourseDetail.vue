@@ -242,7 +242,15 @@ const renderDynamicTable = (tableData, title, emptyMessage) => {
         columns.forEach(col => {
             let val = row[col];
             if (val === null || val === undefined) val = '';
-            tbody += `<td class="p-3 text-sm">${val}</td>`;
+            // Make file paths clickable
+            if (typeof val === 'string' && (val.startsWith('/files/') || val.startsWith('/private/files/'))) {
+                const fileName = val.split('/').pop();
+                tbody += `<td class="p-3 text-sm"><a href="${val}" target="_blank" class="text-blue-600 hover:text-blue-800 underline">${fileName}</a></td>`;
+            } else if (typeof val === 'string' && (val.startsWith('http://') || val.startsWith('https://'))) {
+                tbody += `<td class="p-3 text-sm"><a href="${val}" target="_blank" class="text-blue-600 hover:text-blue-800 underline">${val}</a></td>`;
+            } else {
+                tbody += `<td class="p-3 text-sm">${val}</td>`;
+            }
         });
         tbody += `</tr>`;
     });
