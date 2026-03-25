@@ -186,9 +186,9 @@
 </template>
 
 <script setup>
-import { createDocumentResource } from 'frappe-ui'
+import { createResource } from 'frappe-ui'
 import { useRoute } from 'vue-router'
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 
 const route = useRoute()
 
@@ -269,9 +269,14 @@ const renderDynamicTable = (tableData, title, emptyMessage) => {
 };
 
 // Automatically fetches the specific document based on the URL parameter
-const course = createDocumentResource({
-  doctype: 'Training Course', // Your exact Doctpye Name
-  name: route.params.name, // The ID taken from the URL
+const courseResource = createResource({
+  url: 'lms_custom.api.get_course_details',
+  params: { route_or_name: route.params.name },
   auto: true
+})
+
+const course = reactive({
+  get doc() { return courseResource.data },
+  get loading() { return courseResource.loading }
 })
 </script>

@@ -43,3 +43,15 @@ def get_my_training_courses():
         fields=["*"],
         order_by="creation desc"
     )
+
+@frappe.whitelist()
+def get_course_details(route_or_name):
+    if frappe.db.exists("Training Course", route_or_name):
+        return frappe.get_doc("Training Course", route_or_name).as_dict()
+    
+    doc_name = frappe.db.get_value("Training Course", {"route": route_or_name}, "name")
+    if doc_name:
+        return frappe.get_doc("Training Course", doc_name).as_dict()
+        
+    frappe.throw(f"Training Course {route_or_name} not found", frappe.DoesNotExistError)
+
