@@ -97,14 +97,14 @@
              <div v-else>
                 <p class="text-gray-500 italic">No links available</p>
              </div>
-                          <div class="mt-4 border-t pt-4" v-if="course.doc.sync_status">
-                 <p class="text-sm"><strong>Sync Status:</strong> <span class="px-2 py-0.5 rounded text-xs" :class="course.doc.sync_status === 'Success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">{{ course.doc.sync_status }}</span></p>
-                 <p class="text-sm mt-2 text-red-600" v-if="course.doc.sync_error"><strong>Sync Error:</strong> {{ course.doc.sync_error }}</p>
-              </div>
-              <div class="mt-4 border-t pt-4" v-if="course.doc.google_classroom_id || course.doc.calendar_event_id">
-                 <p class="text-sm text-gray-500 mb-1" v-if="course.doc.google_classroom_id">Classroom ID: <span class="font-mono text-gray-900">{{ course.doc.google_classroom_id }}</span></p>
-                 <p class="text-sm text-gray-500" v-if="course.doc.calendar_event_id">Calendar Event ID: <span class="font-mono text-gray-900">{{ course.doc.calendar_event_id }}</span></p>
-              </div>
+             <div class="mt-4 border-t pt-4" v-if="course.doc.sync_status">
+                <p class="text-sm"><strong>Sync Status:</strong> <span class="px-2 py-0.5 rounded text-xs" :class="course.doc.sync_status === 'Success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">{{ course.doc.sync_status }}</span></p>
+                <p class="text-sm mt-2 text-red-600" v-if="course.doc.sync_error"><strong>Sync Error:</strong> {{ course.doc.sync_error }}</p>
+             </div>
+             <div class="mt-4 border-t pt-4" v-if="course.doc.google_classroom_id || course.doc.calendar_event_id">
+                <p class="text-sm text-gray-500 mb-1" v-if="course.doc.google_classroom_id">Classroom ID: <span class="font-mono text-gray-900">{{ course.doc.google_classroom_id }}</span></p>
+                <p class="text-sm text-gray-500" v-if="course.doc.calendar_event_id">Calendar Event ID: <span class="font-mono text-gray-900">{{ course.doc.calendar_event_id }}</span></p>
+             </div>
           </div>
         </div>
 
@@ -149,7 +149,7 @@
              <h3 class="font-bold text-xl mb-4 border-b pb-2">Notes</h3>
              <div class="text-gray-600 prose max-w-none" v-html="course.doc.notes"></div>
         </div>
-        <div v-if="!course.doc.lms_notes?.length && !course.doc.notes" class="bg-white rounded-lg shadow-sm border p-6 mb-6 text-center text-gray-500 italic">No notes found.</div>
+        <div v-if="(!course.doc.lms_notes || course.doc.lms_notes.length === 0) && !course.doc.notes" class="bg-white rounded-lg shadow-sm border p-6 mb-6 text-center text-gray-500 italic">No notes found.</div>
     </div>
 
     <!-- FEEDBACK TAB -->
