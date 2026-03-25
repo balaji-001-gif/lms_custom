@@ -97,10 +97,14 @@
              <div v-else>
                 <p class="text-gray-500 italic">No links available</p>
              </div>
-             
-             <div class="mt-4 border-t pt-4" v-if="course.doc.sync_status">
-                <p class="text-sm"><strong>Sync Status:</strong> <span class="px-2 py-0.5 rounded text-xs" :class="course.doc.sync_status === 'Success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">{{ course.doc.sync_status }}</span></p>
-             </div>
+                          <div class="mt-4 border-t pt-4" v-if="course.doc.sync_status">
+                 <p class="text-sm"><strong>Sync Status:</strong> <span class="px-2 py-0.5 rounded text-xs" :class="course.doc.sync_status === 'Success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">{{ course.doc.sync_status }}</span></p>
+                 <p class="text-sm mt-2 text-red-600" v-if="course.doc.sync_error"><strong>Sync Error:</strong> {{ course.doc.sync_error }}</p>
+              </div>
+              <div class="mt-4 border-t pt-4" v-if="course.doc.google_classroom_id || course.doc.calendar_event_id">
+                 <p class="text-sm text-gray-500 mb-1" v-if="course.doc.google_classroom_id">Classroom ID: <span class="font-mono text-gray-900">{{ course.doc.google_classroom_id }}</span></p>
+                 <p class="text-sm text-gray-500" v-if="course.doc.calendar_event_id">Calendar Event ID: <span class="font-mono text-gray-900">{{ course.doc.calendar_event_id }}</span></p>
+              </div>
           </div>
         </div>
 
@@ -138,23 +142,40 @@
         <div v-html="renderDynamicTable(course.doc.table_monf, 'Batch Details', 'No batches found.')"></div>
     </div>
 
-    <!-- ADDITIONAL INFO TAB -->
-    <div v-show="activeTab === 'Additional'">
+    <!-- NOTES TAB -->
+    <div v-show="activeTab === 'Notes'">
+        <div v-html="renderDynamicTable(course.doc.lms_notes, 'LMS Notes', 'No LMS notes found.')"></div>
+        <div class="bg-white rounded-lg shadow-sm border p-6 mb-6" v-if="course.doc.notes">
+             <h3 class="font-bold text-xl mb-4 border-b pb-2">Notes</h3>
+             <div class="text-gray-600 prose max-w-none" v-html="course.doc.notes"></div>
+        </div>
+        <div v-if="!course.doc.lms_notes?.length && !course.doc.notes" class="bg-white rounded-lg shadow-sm border p-6 mb-6 text-center text-gray-500 italic">No notes found.</div>
+    </div>
+
+    <!-- FEEDBACK TAB -->
+    <div v-show="activeTab === 'Feedback'">
         <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
-             <h3 class="font-bold text-xl mb-4 border-b pb-2">Feedback & Notes</h3>
-             <div v-if="course.doc.notes" class="mb-4">
-                 <p class="font-bold text-gray-700 text-sm mb-1">Notes:</p>
-                 <div class="text-gray-600 bg-gray-50 p-4 rounded">{{ course.doc.notes }}</div>
+             <h3 class="font-bold text-xl mb-4 border-b pb-2">Feedback</h3>
+              <div v-if="course.doc.feed_back_1" class="mb-4">
+                  <p class="font-bold text-gray-700 text-sm mb-1">Feedback 1:</p>
+                  <div class="text-gray-600 bg-gray-50 p-4 rounded">{{ course.doc.feed_back_1 }}</div>
+              </div>
+              <div v-if="course.doc.feed_back_2" class="mb-4">
+                  <p class="font-bold text-gray-700 text-sm mb-1">Feedback 2:</p>
+                  <div class="text-gray-600 bg-gray-50 p-4 rounded">{{ course.doc.feed_back_2 }}</div>
+              </div>
+              <p v-if="!course.doc.feed_back_1 && !course.doc.feed_back_2" class="text-gray-500 italic">No feedback registered.</p>
+        </div>
+    </div>
+
+    <!-- ASSIGNMENT TAB -->
+    <div v-show="activeTab === 'Assignment'">
+        <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
+             <h3 class="font-bold text-xl mb-4 border-b pb-2">Assignment</h3>
+             <div v-if="course.doc.route">
+                 <p class="mb-2"><strong>Route:</strong> {{ course.doc.route }}</p>
              </div>
-             <div v-if="course.doc.feed_back_1" class="mb-4">
-                 <p class="font-bold text-gray-700 text-sm mb-1">Feedback 1:</p>
-                 <div class="text-gray-600 bg-gray-50 p-4 rounded">{{ course.doc.feed_back_1 }}</div>
-             </div>
-             <div v-if="course.doc.feed_back_2">
-                 <p class="font-bold text-gray-700 text-sm mb-1">Feedback 2:</p>
-                 <div class="text-gray-600 bg-gray-50 p-4 rounded">{{ course.doc.feed_back_2 }}</div>
-             </div>
-             <p v-if="!course.doc.notes && !course.doc.feed_back_1 && !course.doc.feed_back_2" class="text-gray-500 italic">No notes or feedback registered.</p>
+             <p v-else class="text-gray-500 italic">No assignment details available.</p>
         </div>
     </div>
 
@@ -171,7 +192,7 @@ import { ref } from 'vue'
 
 const route = useRoute()
 
-const tabs = ['Main', 'Details', 'Attendance', 'Assessment', 'Batch', 'Additional']
+const tabs = ['Main', 'Details', 'Attendance', 'Assessment', 'Batch', 'Notes', 'Feedback', 'Assignment']
 const activeTab = ref('Details')
 
 const formatTime = (timeStr) => {
