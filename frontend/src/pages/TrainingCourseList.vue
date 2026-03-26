@@ -11,7 +11,7 @@
           v-for="course in courses.data" 
           :key="course.name"
           class="bg-white rounded-lg shadow-sm border p-5 cursor-pointer hover:shadow-md transition duration-200"
-          @click="$router.push(`/training-courses/${course.route || course.name}`)"
+          @click="$router.push(`/training-courses/${course.name}`)"
         >
             <h3 class="font-bold text-lg text-gray-900 mb-1">{{ course.course_name || course.module_name }}</h3>
             <p class="text-sm text-gray-500 mb-4 line-clamp-2">
