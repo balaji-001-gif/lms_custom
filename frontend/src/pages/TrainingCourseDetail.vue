@@ -188,7 +188,7 @@
 <script setup>
 import { createResource } from 'frappe-ui'
 import { useRoute } from 'vue-router'
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 
 const route = useRoute()
 
@@ -271,9 +271,14 @@ const renderDynamicTable = (tableData, title, emptyMessage) => {
 // Automatically fetches the specific document based on the URL parameter
 const courseResource = createResource({
   url: 'lms_custom.api.get_course_details',
-  params: { route_or_name: route.params.name },
-  auto: true
+  auto: false
 })
+
+watch(() => route.params.name, (newName) => {
+  if (newName) {
+    courseResource.fetch({ route_or_name: newName })
+  }
+}, { immediate: true })
 
 const course = reactive({
   get doc() { return courseResource.data },
